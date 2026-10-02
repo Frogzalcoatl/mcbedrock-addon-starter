@@ -1,6 +1,5 @@
 // biome-ignore-all lint/suspicious/noConsole: intended logging
 
-import { execSync } from "node:child_process";
 import { context } from "esbuild";
 
 const args = process.argv.slice(2);
@@ -9,7 +8,7 @@ const isWatch = args.includes("--watch");
 /** @type {import('esbuild').BuildOptions} */
 const options = {
 	bundle: true,
-	entryPoints: ["./source/index.ts"],
+	entryPoints: ["./behaviors/source/index.ts"],
 	external: [
 		"@minecraft/server",
 		"@minecraft/server-ui",
@@ -21,7 +20,7 @@ const options = {
 	keepNames: true,
 	logLevel: "info",
 	minify: false,
-	outfile: "scripts/main.esm.js",
+	outfile: "behaviors/scripts/main.esm.js",
 	platform: "neutral",
 	sourcemap: false,
 	sourcesContent: false,

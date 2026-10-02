@@ -1,5 +1,5 @@
-# mcbedrock-gametest-starter
-A template repository for getting started with scripting gametest modules for Minecraft: Bedrock Edition.
+# Contributing
+This addon template uses [sunshinekitsune's scripting template](https://github.com/sunshinekitsune/mcbedrock-gametest-starter) for Minecraft: Bedrock Edition, slightly modified to include a resource pack.
 
 ## Features
 * Typescript configured for ES2023.
@@ -7,41 +7,37 @@ A template repository for getting started with scripting gametest modules for Mi
 * Strict linting with Biome.
 * Development environment configured with extensions.
 * Minification and js.map.
-* Automated mcpack building.
+* Automated mcaddon building.
 
 ## Requirements
 You need the following utilities installed: [pnpm](https://pnpm.io/), [node LTS](https://nodejs.org/en/download), [vscode](https://code.visualstudio.com/)
 
 ## Setup
-It's recommended to [use this repository as a template.](https://github.com/new?template_name=mcbedrock-gametest-starter&template_owner=sunshinekitsune)
+1. Clone the repository.
 
-1. Locate your Minecraft development behavior packs directory.
-
-	Press ``Windows + R`` and paste the appropriate directory path for your Minecraft version into File Explorer.
-	* Minecraft Bedrock ``%appdata%\Minecraft Bedrock\users\shared\games\com.mojang\development_behavior_packs``
-	* Minecraft Preview ``%appdata%\Minecraft Bedrock Preview\users\shared\games\com.mojang\development_behavior_packs``
-
-2. Clone the repository.
-
-	Open a terminal in that directory and clone your repository.
+	Open a terminal and clone this repository.
 	```sh
 	git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
 	cd YOUR_REPO
 	```
 
-3. Install dependencies.
+2. Install dependencies.
 
 	Install the required Node packages.
 	```sh
 	pnpm install
 	```
 
+3. Link this project to the com.mojang folder.
+
+	Open `junctions.bat` and enter "y" to create junctions in the com.mojang folder.
+
 4. Open your IDE.
 
-	After installing the packages, open the folder in VSCode.
+	After creating junctions, open the folder in VSCode.
 	* If you have already opened VSCode, restart so Biome can initialize properly.
 
-5. Install recommended packages.
+5. Install the recommended extensions.
 
 	In the bottom right of VSCode, it should ask you to install some extensions. Click yes!
 
@@ -50,13 +46,13 @@ It's recommended to [use this repository as a template.](https://github.com/new?
 ## Commands
 - ``pnpm run watch`` Cleans the output directory and automatically recompiles scripts when files are modified. Use this while developing.
 - ``pnpm run build`` Performs a single production build.
-- ``pnpm run pack`` Builds code and packs all necessary files into a addon.mcpack.
-- ``pnpm run clean`` Remotes temporary files.
+- ``pnpm run pack`` Builds code and packs all necessary files into a .mcaddon archive.
+- ``pnpm run clean`` Removes temporary files.
 
 # Post-setup instructions.
-1. Open ``manifest.json`` replace all 3 of the the UUIDs with new unique ones. [You can generate them quickly here](https://www.uuidgenerator.net/). Also update the pack name and description.
-2. Update the pack icon. (pack_icon.png)
-3. If you want to compress your code for mcpack builds, set minify: true in tools/esbuild.cjs.
+1. Open ``manifest.json`` in behaviors and resources then replace all 3 of the the UUIDs with new unique ones. [You can generate them quickly here](https://www.uuidgenerator.net/). Also update the pack names and descriptions.
+2. Update the pack icons. (behaviors/pack_icon.png and resources/pack_icon.png)
+3. If you want to compress your code for mcaddon builds, set minify: true in tools/esbuild.cjs.
 4. Depending on who you are, update LICENSE.md as needed to match your needs.
 
 ## Beta API

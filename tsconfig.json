@@ -26,6 +26,6 @@
 		"types": [],
 		"verbatimModuleSyntax": true
 	},
-	"exclude": ["scripts", "node_modules"],
-	"include": ["source"]
+	"exclude": ["behaviors/scripts", "node_modules"],
+	"include": ["behaviors/source"]
 }

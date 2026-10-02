@@ -1,25 +1,21 @@
 // biome-ignore-all lint/suspicious/noConsole: intended logging
 
 import { createWriteStream, promises as promisesFs } from "node:fs";
-import { resolve as _resolve, join } from "node:path";
+import { resolve as _resolve, basename, join } from "node:path";
 import { ZipArchive } from "archiver";
 
-const MCPACK_FILENAME = "addon.mcpack";
+const MCADDON_FILENAME = "addon.mcaddon";
 const OUTPUT_DIRECTORY_NAME = "_temp_mcpack_directory";
 
 const PROJECT_ROOT = _resolve(import.meta.dirname, "..");
-const OUTPUT_DIRECTORY_PATH = join(PROJECT_ROOT, OUTPUT_DIRECTORY_NAME);
+const BEHAVIORS_DIRECTORY = join(PROJECT_ROOT, "behaviors");
+const RESOURCES_DIRECTORY = join(PROJECT_ROOT, "resources");
+const OUTPUT_DIRECTORY = join(PROJECT_ROOT, OUTPUT_DIRECTORY_NAME);
+const BEHAVIOR_OUTPUT_DIRECTORY = join(OUTPUT_DIRECTORY, "behaviors");
+const RESOURCE_OUTPUT_DIRECTORY = join(OUTPUT_DIRECTORY, "resources");
 
-const SKIP_DIRECTORIES = [".vscode", "node_modules", "source", "tools", OUTPUT_DIRECTORY_NAME];
-const SKIP_FILES = [
-	"build-mcpack.cjs",
-	"esbuild.cjs",
-	"package.json",
-	"pnpm-lock.yaml",
-	"pnpm-workspace.yaml",
-	"tsconfig.json",
-	MCPACK_FILENAME,
-];
+const SKIP_DIRECTORIES = ["source"];
+const LICENSE_PATH = join(PROJECT_ROOT, "LICENSE.md");
 
 async function copyDirectory(source, destination) {
 	await promisesFs.mkdir(destination, { recursive: true });
@@ -34,13 +30,17 @@ async function copyDirectory(source, destination) {
 			}
 			promises.push(copyDirectory(sourcePath, destinationPath));
 		} else {
-			if (SKIP_FILES.includes(name)) {
-				continue;
-			}
 			promises.push(promisesFs.copyFile(sourcePath, destinationPath));
 		}
 	}
 	await Promise.all(promises);
+}
+
+async function copyFileToDirectory(filePath, destination) {
+	await promisesFs.mkdir(destination, { recursive: true });
+	const name = basename(filePath);
+	const destinationPath = join(destination, name);
+	await promisesFs.copyFile(filePath, destinationPath);
 }
 
 async function createZip(sourceDir, outputFilePath) {
@@ -59,23 +59,26 @@ async function createZip(sourceDir, outputFilePath) {
 
 async function build() {
 	try {
-		await promisesFs.rm(OUTPUT_DIRECTORY_PATH, { force: true, recursive: true }).catch(() => {});
+		await promisesFs.rm(OUTPUT_DIRECTORY, { force: true, recursive: true }).catch(() => {});
 
 		console.log(`Starting build in: ${PROJECT_ROOT}`);
 		console.log("Cleaning up old output directory...");
-		await promisesFs.rm(OUTPUT_DIRECTORY_PATH, { force: true, recursive: true });
+		await promisesFs.rm(OUTPUT_DIRECTORY, { force: true, recursive: true });
 
-		console.log(`Creating temporary directory at: ${OUTPUT_DIRECTORY_PATH}`);
-		await copyDirectory(PROJECT_ROOT, OUTPUT_DIRECTORY_PATH);
+		console.log(`Creating temporary directory at: ${OUTPUT_DIRECTORY}`);
+		await copyDirectory(BEHAVIORS_DIRECTORY, BEHAVIOR_OUTPUT_DIRECTORY);
+		await copyFileToDirectory(LICENSE_PATH, BEHAVIOR_OUTPUT_DIRECTORY);
+		await copyDirectory(RESOURCES_DIRECTORY, RESOURCE_OUTPUT_DIRECTORY);
+		await copyFileToDirectory(LICENSE_PATH, RESOURCE_OUTPUT_DIRECTORY);
 		console.log("Successfully copied files.");
 
-		const zipFilePath = join(PROJECT_ROOT, MCPACK_FILENAME);
-		console.log(`Zipping contents to ${MCPACK_FILENAME}...`);
-		await createZip(OUTPUT_DIRECTORY_PATH, zipFilePath);
-		console.log("Successfully created addon.mcpack.");
+		const zipFilePath = join(PROJECT_ROOT, MCADDON_FILENAME);
+		console.log(`Zipping contents to ${MCADDON_FILENAME}...`);
+		await createZip(OUTPUT_DIRECTORY, zipFilePath);
+		console.log("Successfully created addon.mcaddon.");
 
 		console.log("Deleting temporary output directory...");
-		await promisesFs.rm(OUTPUT_DIRECTORY_PATH, { force: true, recursive: true });
+		await promisesFs.rm(OUTPUT_DIRECTORY, { force: true, recursive: true });
 		console.log("Cleanup complete.");
 
 		console.log("\nBuild finished successfully!");

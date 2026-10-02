@@ -2,18 +2,22 @@
 	"dependencies": [
 		{
 			"module_name": "@minecraft/server",
-			"version": "2.9.0"
+			"version": "2.10.0"
 		},
 		{
 			"module_name": "@minecraft/server-ui",
-			"version": "2.1.0"
+			"version": "2.2.0"
+		},
+		{
+			"uuid": "ccf32bcf-fb87-4435-8e9e-f4eb62b4ba54",
+			"version": [1, 0, 0]
 		}
 	],
 	"format_version": 2,
 	"header": {
 		"description": "Made with moderate amounts of care.",
-		"min_engine_version": [1, 26, 33],
-		"name": "Gametest Starter Addon",
+		"min_engine_version": [1, 26, 50],
+		"name": "Addon Starter",
 		"uuid": "1ea0288f-1f50-4b20-ba90-48acdaa922ef",
 		"version": [1, 0, 0]
 	},
