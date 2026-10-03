@@ -1,4 +1,4 @@
-# mcbredrock-addon-starter
+# mcbedrock-addon-starter
 This addon template uses [sunshinekitsune's scripting template](https://github.com/sunshinekitsune/mcbedrock-gametest-starter) for Minecraft: Bedrock Edition, slightly modified to include a resource pack.
 
 ## Features
